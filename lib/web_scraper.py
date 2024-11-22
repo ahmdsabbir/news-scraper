@@ -46,3 +46,53 @@ class WebScraper:
                     anchors.append(Anchor(text=text, url=href))
 
         return anchors
+    
+
+    # def get_content(self, url: str):
+    #     print('url: ', url)
+    #     response = RequestHandler.make_request(url)
+    #     content = response.content
+    #     soup = Parser.get_soup(content)
+
+    #     # main_div = soup.find('div', class_='VzzDZ')        
+
+    #     # ps = main_div.find_all('p')
+
+    #     ps = soup.find_all('p')
+
+    #     if not ps:
+    #         raise Exception("No p tags found")
+        
+    #     article: str = ''
+
+    #     for p in ps:
+    #         p_content = p.get_text(strip=True)
+
+    #         if (p_content is not None and len(p_content) > 50):
+    #             article = article + '<p>' + p_content + "</p>"
+
+        
+    #     return content
+
+    def get_content(self, url: str) -> str:
+        response = RequestHandler.make_request(url)
+        content = response.content
+        soup = Parser.get_soup(content)
+        
+        # Find the main container div (assuming it has a specific class or id)
+        main_container = soup.find('div', class_='container')  # Replace 'your-container-class' with the actual class of your container div
+        
+        if not main_container:
+            raise Exception("No container div found")
+        
+        article: str = ''
+        # Iterate over each child div within the main container
+        for child_div in main_container.find_all('div', recursive=False):
+            # For each child div, find all <p> tags
+            ps = child_div.find_all('p')
+            for p in ps:
+                p_content = p.get_text(strip=True)
+                if p_content and len(p_content) > 50:
+                    article += f'<p>{p_content}</p>'
+        
+        return article

@@ -7,7 +7,13 @@ if __name__ == "__main__":
 
     anchors = scraper.get_anchors()
 
-    for a in anchors:
-        print(a.text)
-        print(a.url)
-        print("--------------------------")
+    urls = [anchor.url for anchor in anchors]
+
+
+    for idx, url in enumerate(urls):
+        if idx == 1:
+            break
+
+        article = scraper.get_content(url)
+
+        print(article)
