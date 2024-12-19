@@ -51,6 +51,67 @@ class XMLWriter:
 
         tree.write(feed_file, encoding="utf-8", xml_declaration=True)
 
+    
+    def generate_atom_feed(title, subtitle, link, entries, content):
+        """Generates an Atom feed using ElementTree.
+
+        Args:
+            title: The title of the feed.
+            subtitle: The subtitle of the feed.
+            link: The link to the feed.
+            entries: A list of dictionaries, each containing 'title', 'link', 'published', and 'summary' keys.
+        """
+
+        feed = ElementTree.Element('feed')
+        feed.set('xmlns', 'http://www.w3.org/2005/Atom')
+
+        title_elem = ElementTree.SubElement(feed, 'title')
+        title_elem.text = title
+
+        subtitle_elem = ElementTree.SubElement(feed, 'subtitle')
+        subtitle_elem.text = subtitle
+
+        id_elem = ElementTree.SubElement(feed, 'id')
+        id_elem.text = link
+
+        updated_elem = ElementTree.SubElement(feed, 'updated')
+        updated_elem.text = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
+        link_elem = ElementTree.SubElement(feed, 'link')
+        link_elem.set('href', link)
+        link_elem.set('rel', 'self')
+        link_elem.set('type', 'application/atom+xml')
+
+        for entry in entries:
+            entry_elem = ElementTree.SubElement(feed, 'entry')
+
+            title_elem = ElementTree.SubElement(entry_elem, 'title')
+            title_elem.text = entry['title']
+
+            link_elem = ElementTree.SubElement(entry_elem, 'link')
+            link_elem.set('href', entry['link'])
+            link_elem.set('rel', 'alternate')
+            link_elem.set('type', 'text/html')
+
+            id_elem = ElementTree.SubElement(entry_elem, 'id')
+            id_elem.text = entry['link']
+
+            published_elem = ElementTree.SubElement(entry_elem, 'published')
+            published_elem.text = entry['published']
+
+            updated_elem = ElementTree.SubElement(entry_elem, 'updated')
+            updated_elem.text = entry['published']
+
+            summary_elem = ElementTree.SubElement(entry_elem, 'summary')
+            summary_elem.text = entry['summary']
+
+            content_elem = ElementTree.SubElement(entry_elem, "content", type="html")
+            content_elem.text = content
+
+        tree = ElementTree.ElementTree(feed)
+        
+        return tree
+
 # # Example usage
 # new_post = create_blog_post_xml(
 #     title="My New Blog Post",
