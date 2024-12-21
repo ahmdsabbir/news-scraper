@@ -79,6 +79,7 @@ class WebScraper:
         content = response.content
         soup = Parser.get_soup(content)
         
+        h1 = soup.find('h1')
         # Find the main container div (assuming it has a specific class or id)
         main_container = soup.find('div', class_='container')  # Replace 'your-container-class' with the actual class of your container div
         
@@ -95,4 +96,4 @@ class WebScraper:
                 if p_content and len(p_content) > 50:
                     article += f'<p>{p_content}</p>'
         
-        return article
+        return {'heading': h1.text, 'article': article}

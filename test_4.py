@@ -44,7 +44,7 @@ def generate_atom_feed(entry_id, published_date, updated_date, title, content, l
   ET.SubElement(entry, 'link', rel='edit', type='application/atom+xml').attrib = {'href': link}
   ET.SubElement(entry, 'link', rel='self', type='application/atom+xml').attrib = {'href': link}
   alternate_link = ET.SubElement(entry, 'link', rel='alternate', type='text/html')
-  alternate_link.attrib = {'href': link, 'title': 'দেশের বাজারে ২৫০ সিসির নতুন দুই মোটরসাইকেল, দাম কত'}
+  alternate_link.attrib = {'href': link, 'title': title}
 
   # Create author element and sub-elements
   author = ET.SubElement(entry, 'author')
