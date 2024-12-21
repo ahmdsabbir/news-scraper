@@ -1,24 +1,5 @@
 from xml.etree import ElementTree as ET
 
-import os
-from datetime import datetime
-
-def get_current_date_formatted():
-  """
-  Gets the current date and time in the format "2-3-2014-1:05am".
-
-  Returns:
-      str: The current date and time in the specified format.
-  """
-  now = datetime.now()
-  month = now.strftime("%m")
-  day = now.strftime("%d")
-  year = now.strftime("%Y")
-  hour = now.strftime("%I")
-  minute = now.strftime("%M")
-  am_pm = now.strftime("%p")
-  return f"{month}-{day}-{year}-{hour}:{minute}{am_pm.lower()}"
-
 def generate_atom_feed(entry_id, published_date, updated_date, title, content, link, author_name, author_uri, author_email):
   """
   Generates an XML Atom feed with a single entry and writes it to a file.
@@ -75,10 +56,17 @@ def generate_atom_feed(entry_id, published_date, updated_date, title, content, l
 
   # Write the XML to a file
   tree = ET.ElementTree(feed)
+  tree.write('generated.xml', encoding='utf-8', xml_declaration=True)
 
-  target_dir = 'xmls/prothomalo/'
-  os.makedirs(target_dir, exist_ok=True)
-  tree.write(os.path.join(target_dir, get_current_date_formatted() + '.xml'), encoding='utf-8', xml_declaration=True)
+# Example usage
+entry_id = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
+published_date = "2024-12-18T06:29:00.000-08:00"
+updated_date = "2024-12-18T06:29:46.120-08:00"
+title = "DUmmy Content for Mr Rahat"
+content = "<p>Hello world content lorem ipsum</p>"
+link = "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315"
+author_name = "Khobor Dunia"
+author_uri = "https://www.blogger.com/profile/06693327077864093576"
+author_email = "noreply@blogger.com"
 
-    #   tree.write(get_current_date_formatted() + '.xml', encoding='utf-8', xml_declaration=True)
-    
+generate_atom_feed(entry_id, published_date, updated_date, title, content, link, author_name, author_uri, author_email)

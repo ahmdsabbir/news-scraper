@@ -1,0 +1,21 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/"
+      xmlns:thr="http://purl.org/syndication/thread/1.0">
+  <entry>
+    <id>tag:blogger.com,1999:blog-blogID.post-postID</id>
+    <content type="html">This is my first post</content>
+    <link rel="alternate" type="text/html"
+      href="http://blogName.blogspot.com/2007/04/first-post.html">
+    </link>
+    <category scheme="http://schemas.google.com/g/2005#kind" 
+              term="http://schemas.google.com/blogger/2008/kind#post"/>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-blogID.post-postID.comment-commentID</id>
+    <content type="html">This is my first comment</content>
+    <category scheme="http://schemas.google.com/g/2005#kind" 
+              term="http://schemas.google.com/blogger/2008/kind#comment"/>
+    <thr:in-reply-to href="http://blogName.blogspot.com/2007/04/first-post.html" 
+                     ref="tag:blogger.com,1999:blog-blogID.post-postID" 
+                     type="text/html"/>
+  </entry>
+</feed>
