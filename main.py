@@ -1,6 +1,22 @@
 from lib.prothom_alo import ProthomAloScraper
 from lib.xml import generate_atom_feed
 
+from datetime import datetime, timedelta, timezone
+
+def generate_published_date():
+  """Generates a published_date string in the format "YYYY-MM-DDTHH:MM:SS.000-08:00"."""
+
+  # Get current UTC time
+  utc_now = datetime.now(timezone.utc)
+
+  # Calculate PST time (UTC-8)
+  pst_now = utc_now - timedelta(hours=8)
+
+  # Format the PST time as the desired string
+  published_date = pst_now.strftime("%Y-%m-%dT%H:%M:%S.%f%z") 
+
+  return published_date
+
 if __name__ == "__main__":
     scraper = ProthomAloScraper()
     scraper.fetch_and_parse()
@@ -14,8 +30,8 @@ if __name__ == "__main__":
         article = scraper.get_content(url)
 
         entry_id = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
-        published_date = "2024-12-18T06:29:00.000-08:00"
-        updated_date = "2024-12-18T06:29:46.120-08:00"
+        published_date = generate_published_date()
+        updated_date = updated_date
         title = article['heading']
         content = article['article']
         link = "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315"
