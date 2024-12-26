@@ -1,77 +1,87 @@
-from xml.etree import ElementTree
-from datetime import datetime
+import xml.etree.ElementTree as ET
 
-def create_blog_post_xml(title, content, labels=[]):
-    """
-    Creates an XML element representing a new blog post.
+def generate_atom_feed(title, content):
+    # Root entry element
+    entry = ET.Element("entry")
 
-    Args:
-        title: The title of the blog post.
-        content: The content of the blog post (HTML format).
-        labels: A list of labels for the post.
+    # ID
+    id_element = ET.SubElement(entry, "id")
+    id_element.text = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
 
-    Returns:
-        The root element of the new blog post XML element.
-    """
+    # Published
+    published_element = ET.SubElement(entry, "published")
+    published_element.text = "2024-18-02T06:29:00.000-08:00"
 
-    now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    # Updated
+    updated_element = ET.SubElement(entry, "updated")
+    updated_element.text = "2024-18-02T06:29:46.120-08:00"
 
-    post = ElementTree.Element("entry", xmlns="http://www.w3.org/2005/Atom")
-    title_elem = ElementTree.SubElement(post, "title")
-    title_elem.text = title
-    updated_elem = ElementTree.SubElement(post, "updated")
-    updated_elem.text = now
+    # Categories
+    category1 = ET.SubElement(entry, "category")
+    category1.set("scheme", "http://schemas.google.com/g/2005#kind")
+    category1.set("term", "http://schemas.google.com/blogger/2008/kind#post")
 
-    # Assuming published date is the same as updated date
-    published_elem = ElementTree.SubElement(post, "published")
-    published_elem.text = now
+    category2 = ET.SubElement(entry, "category")
+    category2.set("scheme", "http://www.blogger.com/atom/ns#")
+    category2.set("term", "Technology")
 
-    category_elem = ElementTree.SubElement(post, "category", scheme="http://schemas.google.com/g/2005#kind")
-    category_elem.text = "http://schemas.google.com/blogger/2008/kind#post"
+    # Title
+    title_element = ET.SubElement(entry, "title")
+    title_element.set("type", "text")
+    title_element.text = title
 
-    # Add labels as categories
-    for label in labels:
-        category_elem = ElementTree.SubElement(post, "category", scheme="http://www.blogger.com/atom/ns#")
-        category_elem.text = label
+    # Content
+    content_element = ET.SubElement(entry, "content")
+    content_element.set("type", "html")
+    content_element.text = content
 
-    content_elem = ElementTree.SubElement(post, "content", type="html")
-    content_elem.text = content
+    # Links
+    link_edit = ET.SubElement(entry, "link")
+    link_edit.set("rel", "edit")
+    link_edit.set("type", "application/atom+xml")
+    link_edit.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-    # Add other elements like link, author if needed
+    link_self = ET.SubElement(entry, "link")
+    link_self.set("rel", "self")
+    link_self.set("type", "application/atom+xml")
+    link_self.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-    return post
+    link_alternate = ET.SubElement(entry, "link")
+    link_alternate.set("rel", "alternate")
+    link_alternate.set("type", "text/html")
+    link_alternate.set("href", "https://winttech.blogspot.com/2024/12/blog-post.html")
+    link_alternate.set("title", "দেশের বাজারে ২৫০ সিসির নতুন দুই মোটরসাইকেল, দাম কত")
 
-def append_post_to_feed(feed_file, new_post):
-    """
-    Appends a new blog post element to an existing Blogger XML feed.
+    # Author
+    author_element = ET.SubElement(entry, "author")
 
-    Args:
-        feed_file: The path to the existing Blogger XML feed file.
-        new_post: The root element of the new blog post XML element.
-    """
+    author_name = ET.SubElement(author_element, "name")
+    author_name.text = "Khobor Dunia"
 
-    try:
-        tree = ElementTree.parse(feed_file)
-        root = tree.getroot()
-        # Look for the existing main `<feed>` element
-        feed_element = root.find("feed")
+    author_uri = ET.SubElement(author_element, "uri")
+    author_uri.text = "https://www.blogger.com/profile/06693327077864093576"
 
-        if feed_element is None:
-            print("Error: The provided XML file doesn't contain a valid Blogger feed structure.")
-            return
+    author_email = ET.SubElement(author_element, "email")
+    author_email.text = "noreply@blogger.com"
 
-        # Append the new post element as a child of the existing `<feed>` element
-        feed_element.append(new_post)
+    author_image = ET.SubElement(author_element, "gd:image")
+    author_image.set("rel", "http://schemas.google.com/g/2005#thumbnail")
+    author_image.set("width", "35")
+    author_image.set("height", "35")
+    author_image.set("src", "//www.blogger.com/img/blogger_logo_round_35.png")
 
-        tree.write(feed_file, encoding="utf-8", xml_declaration=True)
-        print("New post appended successfully!")
-    except Exception as e:
-        print(f"Error appending post: {e}")
+    # Convert to string
+    xml_str = ET.tostring(entry, encoding="unicode")
+    return xml_str
 
 # Example usage
-new_post_title = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-new_post_content = "<p>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</p>"
-new_post_labels = ["python", "programming"]
+if __name__ == "__main__":
+    title = "Test Title 3"
+    content = "<p>Another Hello World</p>"
+    atom_feed = generate_atom_feed(title, content)
+    
+    # Write to a text file
+    with open("atom_feed.txt", "w", encoding="utf-8") as file:
+        file.write(atom_feed)
 
-new_post_element = create_blog_post_xml(new_post_title, new_post_content, new_post_labels)
-append_post_to_feed("generated.xml", new_post_element)
+    print("Atom feed written to atom_feed.txt")

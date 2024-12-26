@@ -1,136 +1,82 @@
-from xml.etree import ElementTree
-from datetime import datetime
+import xml.etree.ElementTree as ET
 
-def create_blog_post_xml(title, content, labels=[]):
-    """
-    Creates an XML element representing a new blog post.
+def generate_atom_feed(title, content):
+    # Root entry element
+    entry = ET.Element("entry")
 
-    Args:
-        title: The title of the blog post.
-        content: The content of the blog post (HTML format).
-        labels: A list of labels for the post.
+    # ID
+    id_element = ET.SubElement(entry, "id")
+    id_element.text = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
 
-    Returns:
-        The root element of the new blog post XML element.
-    """
+    # Published
+    published_element = ET.SubElement(entry, "published")
+    published_element.text = "2024-18-02T06:29:00.000-08:00"
 
-    now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    # Updated
+    updated_element = ET.SubElement(entry, "updated")
+    updated_element.text = "2024-18-02T06:29:46.120-08:00"
 
-    post = ElementTree.Element("entry", xmlns="http://www.w3.org/2005/Atom")
-    title_elem = ElementTree.SubElement(post, "title")
-    title_elem.text = title
-    updated_elem = ElementTree.SubElement(post, "updated")
-    updated_elem.text = now
-    content_elem = ElementTree.SubElement(post, "content", type="html")
-    content_elem.text = content
+    # Categories
+    category1 = ET.SubElement(entry, "category")
+    category1.set("scheme", "http://schemas.google.com/g/2005#kind")
+    category1.set("term", "http://schemas.google.com/blogger/2008/kind#post")
 
-    for label in labels:
-        category_elem = ElementTree.SubElement(post, "category", scheme="http://www.blogger.com/atom/ns#")
-        category_elem.text = label
+    category2 = ET.SubElement(entry, "category")
+    category2.set("scheme", "http://www.blogger.com/atom/ns#")
+    category2.set("term", "Technology")
 
-    return post
+    # Title
+    title_element = ET.SubElement(entry, "title")
+    title_element.set("type", "text")
+    title_element.text = title
 
-# Example usage
-new_post = create_blog_post_xml(
-    title="My New Blog Post",
-    content="<p>This is the content of my new blog post.</p>",
-    labels=["python", "programming"]
-)
+    # Content
+    content_element = ET.SubElement(entry, "content")
+    content_element.set("type", "html")
+    content_element.text = content
 
-def append_post_to_feed(feed_file, post_element):
-    """
-    Appends a new post element to an existing Blogger XML feed.
+    # Links
+    link_edit = ET.SubElement(entry, "link")
+    link_edit.set("rel", "edit")
+    link_edit.set("type", "application/atom+xml")
+    link_edit.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-    Args:
-        feed_file: The path to the existing Blogger XML feed file.
-        post_element: The root element of the new post XML element.
-    """
+    link_self = ET.SubElement(entry, "link")
+    link_self.set("rel", "self")
+    link_self.set("type", "application/atom+xml")
+    link_self.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-    tree = ElementTree.parse(feed_file)
-    root = tree.getroot()
-    root.append(post_element)
+    link_alternate = ET.SubElement(entry, "link")
+    link_alternate.set("rel", "alternate")
+    link_alternate.set("type", "text/html")
+    link_alternate.set("href", "https://winttech.blogspot.com/2024/12/blog-post.html")
+    link_alternate.set("title", "দেশের বাজারে ২৫০ সিসির নতুন দুই মোটরসাইকেল, দাম কত")
 
-    tree.write(feed_file, encoding="utf-8", xml_declaration=True)
+    # Author
+    author_element = ET.SubElement(entry, "author")
 
-# Example usage
-# Assuming you have a Blogger XML feed named 'my_blog_feed.xml'
-append_post_to_feed("base.xml", new_post)
+    author_name = ET.SubElement(author_element, "name")
+    author_name.text = "Khobor Dunia"
 
+    author_uri = ET.SubElement(author_element, "uri")
+    author_uri.text = "https://www.blogger.com/profile/06693327077864093576"
 
-def generate_atom_feed(title, subtitle, link, entries):
-  """Generates an Atom feed using ElementTree.
+    author_email = ET.SubElement(author_element, "email")
+    author_email.text = "noreply@blogger.com"
 
-  Args:
-    title: The title of the feed.
-    subtitle: The subtitle of the feed.
-    link: The link to the feed.
-    entries: A list of dictionaries, each containing 'title', 'link', 'published', and 'summary' keys.
-  """
+    author_image = ET.SubElement(author_element, "gd:image")
+    author_image.set("rel", "http://schemas.google.com/g/2005#thumbnail")
+    author_image.set("width", "35")
+    author_image.set("height", "35")
+    author_image.set("src", "//www.blogger.com/img/blogger_logo_round_35.png")
 
-  feed = ElementTree.Element('feed')
-  feed.set('xmlns', 'http://www.w3.org/2005/Atom')
-
-  title_elem = ElementTree.SubElement(feed, 'title')
-  title_elem.text = title
-
-  subtitle_elem = ElementTree.SubElement(feed, 'subtitle')
-  subtitle_elem.text = subtitle
-
-  id_elem = ElementTree.SubElement(feed, 'id')
-  id_elem.text = link
-
-  updated_elem = ElementTree.SubElement(feed, 'updated')
-  updated_elem.text = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-
-  link_elem = ElementTree.SubElement(feed, 'link')
-  link_elem.set('href', link)
-  link_elem.set('rel', 'self')
-  link_elem.set('type', 'application/atom+xml')
-
-  for entry in entries:
-    entry_elem = ElementTree.SubElement(feed, 'entry')
-
-    title_elem = ElementTree.SubElement(entry_elem, 'title')
-    title_elem.text = entry['title']
-
-    link_elem = ElementTree.SubElement(entry_elem, 'link')
-    link_elem.set('href', entry['link'])
-    link_elem.set('rel', 'alternate')
-    link_elem.set('type', 'text/html')
-
-    id_elem = ElementTree.SubElement(entry_elem, 'id')
-    id_elem.text = entry['link']
-
-    published_elem = ElementTree.SubElement(entry_elem, 'published')
-    published_elem.text = entry['published']
-
-    updated_elem = ElementTree.SubElement(entry_elem, 'updated')
-    updated_elem.text = entry['published']
-
-    summary_elem = ElementTree.SubElement(entry_elem, 'summary')
-    summary_elem.text = entry['summary']
-
-  tree = ElementTree.ElementTree(feed)
-  
-  return tree
+    # Convert to string
+    xml_str = ET.tostring(entry, encoding="unicode")
+    return xml_str
 
 # Example usage
-entries = [
-    {
-        'title': 'Blog Post 1',
-        'link': 'https://example.com/post1',
-        'published': '2023-11-22T10:00:00Z',
-        'summary': 'This is the first blog post.'
-    },
-    # ... more entries
-]
-
-feed = generate_atom_feed(
-    title='My Awesome Blog',
-    subtitle='The latest news and updates',
-    link='https://example.com/feed',
-    entries=entries
-)
-
-# Write the feed to a file
-feed.write('feed.xml', encoding='utf-8', xml_declaration=True)
+if __name__ == "__main__":
+    title = "New Test Title"
+    content = "<p>This is new test content</p>"
+    atom_feed = generate_atom_feed(title, content)
+    print(atom_feed)
