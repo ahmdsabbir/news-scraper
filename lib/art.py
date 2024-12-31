@@ -12,7 +12,7 @@ def ascii_art():
                    |_|                     
                                                                                                88                                 
 """
-  cprint(art, 'blue')
+  cprint(art, 'red')
 
 if __name__ == '__main__':
   ascii_art()
