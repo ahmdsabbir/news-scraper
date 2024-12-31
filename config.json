@@ -1,0 +1,12 @@
+{
+  "name": "News Scraper",
+  "desc": "Scrape News from papers and save in blogger.com importable XML",
+  "version": "1.0.1",
+  "support": [
+    "prothom-alo"
+  ],
+  "git-repo": "https://github.com/ahmdsabbir/news-scraper.git",
+  "author": "Sabbir Ahmed",
+  "author-uri": "https://github.com/ahmdsabbir",
+  "author-email": "ahmd.sabbir@gmail.com"
+}

@@ -7,7 +7,7 @@ def create_dir_if_not_exists(dir_name):
   Args:
     dir_name: The name of the directory to create.
   """
-  if not os.path.exists(dir_name):
+  if not dir_exists(dir_name):
     os.makedirs(dir_name)
   else:
     pass
