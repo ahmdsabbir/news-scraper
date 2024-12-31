@@ -1,170 +1,75 @@
-from xml.etree import ElementTree as ET
-from dataclasses import dataclass
+import xml.etree.ElementTree as ET
 
-import os
-from datetime import datetime
+def generate_atom_feed(title, content):
+    # Root entry element
+    entry = ET.Element("entry")
 
+    # ID
+    id_element = ET.SubElement(entry, "id")
+    id_element.text = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
 
-@dataclass
-class Entry:
-  entry_id: str
-  published_date: str
-  update_date: str
-  title: str
-  content: str
-  link: str
-  author_name: str
-  author_uri: str
-  author_email: str
+    # Published
+    published_element = ET.SubElement(entry, "published")
+    published_element.text = "2024-18-02T06:29:00.000-08:00"
 
-def get_current_date_formatted():
-  """
-  Gets the current date and time in the format "2-3-2014-1:05am".
+    # Updated
+    updated_element = ET.SubElement(entry, "updated")
+    updated_element.text = "2024-18-02T06:29:46.120-08:00"
 
-  Returns:
-      str: The current date and time in the specified format.
-  """
-  now = datetime.now()
-  month = now.strftime("%m")
-  day = now.strftime("%d")
-  year = now.strftime("%Y")
-  hour = now.strftime("%I")
-  minute = now.strftime("%M")
-  am_pm = now.strftime("%p")
-  return f"{month}-{day}-{year}-{hour}:{minute}{am_pm.lower()}"
+    # Categories
+    category1 = ET.SubElement(entry, "category")
+    category1.set("scheme", "http://schemas.google.com/g/2005#kind")
+    category1.set("term", "http://schemas.google.com/blogger/2008/kind#post")
 
-def generate_atom_feed(entries: list[Entry]):
-  """
-  Generates an XML Atom feed with a single entry and writes it to a file.
+    category2 = ET.SubElement(entry, "category")
+    category2.set("scheme", "http://www.blogger.com/atom/ns#")
+    category2.set("term", "Technology")
 
-  Args:
-      entry_id: The unique identifier for the entry.
-      published_date: The date and time the entry was published (YYYY-MM-DD format).
-      updated_date: The date and time the entry was last updated (YYYY-MM-DD format with time and timezone offset).
-      title: The title of the entry.
-      content: The HTML content of the entry.
-      link: The URL of the entry.
-      author_name: The name of the author.
-      author_uri: The URL of the author's profile.
-      author_email: The email address of the author (can be set to 'noreply@blogger.com').
-  """
+    # Title
+    title_element = ET.SubElement(entry, "title")
+    title_element.set("type", "text")
+    title_element.text = title
 
-  namespaces = {
-      '': 'http://www.w3.org/2005/Atom',
-      'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/',
-      'gd': 'http://schemas.google.com/g/2005',
-      'thr': 'http://purl.org/syndication/thread/1.0',
-      'georss': 'http://www.georss.org/georss'
-  }
+    # Content
+    content_element = ET.SubElement(entry, "content")
+    content_element.set("type", "html")
+    content_element.text = content
 
-  # Create the root element
-  feed = ET.Element('feed', attrib=namespaces)
+    # Links
+    link_edit = ET.SubElement(entry, "link")
+    link_edit.set("rel", "edit")
+    link_edit.set("type", "application/atom+xml")
+    link_edit.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-  # Create the entry element
+    link_self = ET.SubElement(entry, "link")
+    link_self.set("rel", "self")
+    link_self.set("type", "application/atom+xml")
+    link_self.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
 
-  for idx, entry_data in enumerate(entries):
-    print(f'Post {str(idx)}: {entry_data.link}')
+    link_alternate = ET.SubElement(entry, "link")
+    link_alternate.set("rel", "alternate")
+    link_alternate.set("type", "text/html")
+    link_alternate.set("href", "https://winttech.blogspot.com/2024/12/blog-post.html")
+    link_alternate.set("title", "দেশের বাজারে ২৫০ সিসির নতুন দুই মোটরসাইকেল, দাম কত")
 
-    if (idx == 1):
-      break
+    # Author
+    author_element = ET.SubElement(entry, "author")
 
-    entry = ET.SubElement(feed, 'entry')
-    # Add entry elements
-    ET.SubElement(entry, 'id').text = entry_data.entry_id
-    ET.SubElement(entry, 'published').text = entry_data.published_date
-    ET.SubElement(entry, 'updated').text = entry_data.update_date
-    category1 = ET.SubElement(entry, 'category')
-    category1.attrib = {'scheme': 'http://schemas.google.com/g/2005#kind', 'term': 'http://schemas.google.com/blogger/2008/kind#post'}
-    category2 = ET.SubElement(entry, 'category')
-    category2.attrib = {'scheme': 'http://www.blogger.com/atom/ns#', 'term': 'Technology'}
-    ET.SubElement(entry, 'title', type='text').text = entry_data.title
-    content_element = ET.SubElement(entry, 'content', type='html')
-    content_element.text = entry_data.content
-    ET.SubElement(entry, 'link', rel='edit', type='application/atom+xml').attrib = {'href': entry_data.link}
-    ET.SubElement(entry, 'link', rel='self', type='application/atom+xml').attrib = {'href': entry_data.link}
-    alternate_link = ET.SubElement(entry, 'link', rel='alternate', type='text/html')
-    alternate_link.attrib = {'href': entry_data.link, 'title': entry_data.title}
+    author_name = ET.SubElement(author_element, "name")
+    author_name.text = "Khobor Dunia"
 
-    # Create author element and sub-elements
-    author = ET.SubElement(entry, 'author')
-    ET.SubElement(author, 'name').text = entry_data.author_name
-    ET.SubElement(author, 'uri').text = entry_data.author_uri
-    ET.SubElement(author, 'email').text = entry_data.author_email
-    image = ET.SubElement(author, 'gd:image', attrib={'rel': 'http://schemas.google.com/g/2005#thumbnail', 'width': '35', 'height': '35'})
-    image.attrib['src'] = '//www.blogger.com/img/blogger_logo_round_35.png'
+    author_uri = ET.SubElement(author_element, "uri")
+    author_uri.text = "https://www.blogger.com/profile/06693327077864093576"
 
-  # Write the XML to a file
-  tree = ET.ElementTree(feed)
+    author_email = ET.SubElement(author_element, "email")
+    author_email.text = "noreply@blogger.com"
 
-  target_dir = 'xmls/prothomalo/'
-  os.makedirs(target_dir, exist_ok=True)
-  tree.write(os.path.join(target_dir, get_current_date_formatted() + '.xml'), encoding='utf-8', xml_declaration=True)
+    author_image = ET.SubElement(author_element, "gd:image")
+    author_image.set("rel", "http://schemas.google.com/g/2005#thumbnail")
+    author_image.set("width", "35")
+    author_image.set("height", "35")
+    author_image.set("src", "//www.blogger.com/img/blogger_logo_round_35.png")
 
-    #   tree.write(get_current_date_formatted() + '.xml', encoding='utf-8', xml_declaration=True)
-    
-# from xml.etree import ElementTree as ET
-# import os
-# from datetime import datetime
-
-# def get_current_date_formatted():
-#     """
-#     Gets the current date and time in the format "2-3-2014-1:05am".
-    
-#     Returns:
-#         str: The current date and time in the specified format.
-#     """
-#     now = datetime.now()
-#     month = now.strftime("%m")
-#     day = now.strftime("%d")
-#     year = now.strftime("%Y")
-#     hour = now.strftime("%I")
-#     minute = now.strftime("%M")
-#     am_pm = now.strftime("%p")
-#     return f"{month}-{day}-{year}-{hour}:{minute}{am_pm.lower()}"
-
-# def generate_atom_feed(entry_id, published_date, updated_date, title, content, link, author_name, author_uri, author_email):
-#     """
-#     Generates an Atom entry as an XML element.
-    
-#     Args:
-#         entry_id, published_date, updated_date, title, content, link, author_name, author_uri, author_email: Entry details.
-    
-#     Returns:
-#         Element: The generated Atom entry element.
-#     """
-#     namespaces = {
-#         '': 'http://www.w3.org/2005/Atom',
-#         'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/',
-#         'gd': 'http://schemas.google.com/g/2005',
-#         'thr': 'http://purl.org/syndication/thread/1.0',
-#         'georss': 'http://www.georss.org/georss'
-#     }
-
-#     # Create the entry element
-#     entry = ET.Element('entry', attrib=namespaces)
-
-#     # Add entry elements
-#     ET.SubElement(entry, 'id').text = entry_id
-#     ET.SubElement(entry, 'published').text = published_date
-#     ET.SubElement(entry, 'updated').text = updated_date
-#     category1 = ET.SubElement(entry, 'category')
-#     category1.attrib = {'scheme': 'http://schemas.google.com/g/2005#kind', 'term': 'http://schemas.google.com/blogger/2008/kind#post'}
-#     category2 = ET.SubElement(entry, 'category')
-#     category2.attrib = {'scheme': 'http://www.blogger.com/atom/ns#', 'term': 'Technology'}
-#     ET.SubElement(entry, 'title', type='text').text = title
-#     content_element = ET.SubElement(entry, 'content', type='html')
-#     content_element.text = content
-#     ET.SubElement(entry, 'link', rel='edit', type='application/atom+xml').attrib = {'href': link}
-#     ET.SubElement(entry, 'link', rel='self', type='application/atom+xml').attrib = {'href': link}
-#     alternate_link = ET.SubElement(entry, 'link', rel='alternate', type='text/html')
-#     alternate_link.attrib = {'href': link, 'title': title}
-
-#     # Create author element and sub-elements
-#     author = ET.SubElement(entry, 'author')
-#     ET.SubElement(author, 'name').text = author_name
-#     ET.SubElement(author, 'uri').text = author_uri
-#     ET.SubElement(author, 'email').text = author_email
-#     image = ET.SubElement(author, 'gd:image', attrib={'rel': 'http://schemas.google.com/g/2005#thumbnail', 'width': '35', 'height': '35'})
-#     image.attrib['src'] = '//www.blogger.com/img/blogger_logo_round_35.png'
-
-#     return entry
+    # Convert to string
+    xml_str = ET.tostring(entry, encoding="unicode")
+    return xml_str
