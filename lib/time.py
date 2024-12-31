@@ -11,6 +11,6 @@ def generate_published_date():
 
   # Format the PST time as the desired string
   date_str = pst_now.strftime("%Y-%m-%dT%H:%M:%S.%f%z") 
-  readable = pst_now.strftime('%A, %B %d, %Y %H:%M:%S %p %Z')
-  
+  readable = pst_now.strftime('%A-%B-%d-%Y')
+
   return {"date_str": date_str, "readable": readable}
