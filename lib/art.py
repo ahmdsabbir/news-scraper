@@ -1,9 +1,10 @@
 from termcolor import cprint
 
-def ascii_art():
-  """Prints the given ASCII art."""
 
-  art = """
+def ascii_art():
+    """Prints the given ASCII art."""
+
+    art = """
  ___  ___ _ __ __ _ _ __   ___ _ __ 
 / __|/ __| '__/ _` | '_ \ / _ \ '__|
 \__ \ (__| | | (_| | |_) |  __/ |   
@@ -12,7 +13,8 @@ def ascii_art():
                    |_|                     
                                                                                                88                                 
 """
-  cprint(art, 'red')
+    cprint(art, "red")
 
-if __name__ == '__main__':
-  ascii_art()
+
+if __name__ == "__main__":
+    ascii_art()

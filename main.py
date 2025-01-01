@@ -12,29 +12,30 @@ if __name__ == "__main__":
     ascii_art()
     info()
 
-    print('Choices:')
-    print('\t[1] for ProthomAlo: ')
-    choice = input('\nChoose a number and press <Enter> ')
+    print("Choices:")
+    print("\t[1] for ProthomAlo: ")
+    choice = input("\nChoose a number and press <Enter> ")
 
-    if choice != '1':
-        cprint('Only ProthomAlo is currently supported', 'yellow')
+    if choice != "1":
+        cprint("Only ProthomAlo is currently supported", "yellow")
     else:
         pass
-    
-    create_dir_if_not_exists('data')
-    
 
-    if choice == '1':
+    create_dir_if_not_exists("data")
+
+    if choice == "1":
         curr_date = generate_published_date()
-
-        create_dir_if_not_exists('data/prothomalo')
+        print(curr_date.get('readable'))
+        create_dir_if_not_exists("data/prothomalo")
 
         if dir_exists(f'data/prothomalo/{curr_date['readable']}.txt'):
-            cprint('Looks like you already scraped ProthomAlo today.', 'red')
-            cprint(f'Please delete the file: "data/prothomalo/{curr_date['readable']}.txt" before retrying', 'red')
+            cprint("Looks like you already scraped ProthomAlo today.", "red")
+            cprint(
+                f'Please delete the file: "data/prothomalo/{curr_date['readable']}.txt" before retrying',
+                "red",
+            )
 
             exit()
-
 
         scraper = ProthomAloScraper()
         scraper.fetch_and_parse()
@@ -67,10 +68,15 @@ if __name__ == "__main__":
                 cprint(f"Reason: {str(e)}", "magenta")
 
         # Write to a text file
-        with open(f"data/prothomalo/{curr_date['readable']}.txt", "w", encoding="utf-8") as file:
+        with open(
+            f"data/prothomalo/{curr_date['readable']}.txt", "w", encoding="utf-8"
+        ) as file:
             file.write(atom_feed)
 
         cprint("Process executed. Here are the details: ", "white")
         cprint(f"Successful entries: {str(successfull)}", "cyan")
         cprint(f"    Failed entries: {str(len(urls) - successfull)}", "red")
-        cprint(f"Filed saved at this location: data/prothomalo/{curr_date['readable']}.txt", 'green')
+        cprint(
+            f"Filed saved at this location: data/prothomalo/{curr_date['readable']}.txt",
+            "green",
+        )

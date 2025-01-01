@@ -1,12 +1,15 @@
 import xml.etree.ElementTree as ET
 
+
 def generate_atom_feed(title, content):
     # Root entry element
     entry = ET.Element("entry")
 
     # ID
     id_element = ET.SubElement(entry, "id")
-    id_element.text = "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
+    id_element.text = (
+        "tag:blogger.com,1999:blog-5968071689632345895.post-207570408380315315"
+    )
 
     # Published
     published_element = ET.SubElement(entry, "published")
@@ -39,12 +42,18 @@ def generate_atom_feed(title, content):
     link_edit = ET.SubElement(entry, "link")
     link_edit.set("rel", "edit")
     link_edit.set("type", "application/atom+xml")
-    link_edit.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
+    link_edit.set(
+        "href",
+        "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315",
+    )
 
     link_self = ET.SubElement(entry, "link")
     link_self.set("rel", "self")
     link_self.set("type", "application/atom+xml")
-    link_self.set("href", "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315")
+    link_self.set(
+        "href",
+        "https://www.blogger.com/feeds/5968071689632345895/posts/default/207570408380315315",
+    )
 
     link_alternate = ET.SubElement(entry, "link")
     link_alternate.set("rel", "alternate")
