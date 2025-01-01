@@ -12,8 +12,9 @@ if __name__ == "__main__":
     ascii_art()
     info()
 
-    print('\nEnter: [1] for ProthomAlo: ')
-    choice = input('')
+    print('Choices:')
+    print('\t[1] for ProthomAlo: ')
+    choice = input('\nChoose a number and press <Enter> ')
 
     if choice != '1':
         cprint('Only ProthomAlo is currently supported', 'yellow')
@@ -29,7 +30,7 @@ if __name__ == "__main__":
         create_dir_if_not_exists('data/prothomalo')
 
         if dir_exists(f'data/prothomalo/{curr_date['readable']}.txt'):
-            cprint('Looks like you already scraped today.', 'red')
+            cprint('Looks like you already scraped ProthomAlo today.', 'red')
             cprint(f'Please delete the file: "data/prothomalo/{curr_date['readable']}.txt" before retrying', 'red')
 
             exit()

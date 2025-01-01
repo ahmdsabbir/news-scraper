@@ -1,7 +1,7 @@
 {
   "name": "News Scraper",
   "desc": "Scrape News from papers and save in blogger.com importable XML",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "support": [
     "prothom-alo"
   ],
