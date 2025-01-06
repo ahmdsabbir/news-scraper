@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-
+from lib.time_utils import generate_blogger_timestamp
 
 def generate_atom_feed(title, content):
     # Root entry element
@@ -13,11 +13,11 @@ def generate_atom_feed(title, content):
 
     # Published
     published_element = ET.SubElement(entry, "published")
-    published_element.text = "2024-18-02T06:29:00.000-08:00"
+    published_element.text = generate_blogger_timestamp()
 
     # Updated
     updated_element = ET.SubElement(entry, "updated")
-    updated_element.text = "2024-18-02T06:29:46.120-08:00"
+    updated_element.text = generate_blogger_timestamp()
 
     # Categories
     category1 = ET.SubElement(entry, "category")
@@ -59,7 +59,7 @@ def generate_atom_feed(title, content):
     link_alternate.set("rel", "alternate")
     link_alternate.set("type", "text/html")
     link_alternate.set("href", "https://winttech.blogspot.com/2024/12/blog-post.html")
-    link_alternate.set("title", "দেশের বাজারে ২৫০ সিসির নতুন দুই মোটরসাইকেল, দাম কত")
+    link_alternate.set("title", title)
 
     # Author
     author_element = ET.SubElement(entry, "author")

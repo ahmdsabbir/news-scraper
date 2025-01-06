@@ -4,7 +4,7 @@ from lib.art import ascii_art
 from lib.info import info
 from lib.prothom_alo import ProthomAloScraper
 from lib.xml import generate_atom_feed
-from lib.time import generate_published_date
+from lib.time_utils import generate_published_date
 from lib.directories import create_dir_if_not_exists, dir_exists
 
 # Example usage

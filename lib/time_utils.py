@@ -15,3 +15,17 @@ def generate_published_date():
     readable = pst_now.strftime("%A-%B-%d-%Y")
 
     return {"date_str": date_str, "readable": readable}
+
+def generate_blogger_timestamp():
+    """
+    Generate the current date and time in the format used for Blogger timestamps.
+
+    Format: YYYY-DD-MMTHH:MM:SS.sss±HH:MM
+    """
+    now = datetime.now()
+    # Format datetime object into the desired string format
+    formatted_time = now.strftime("%Y-%d-%mT%H:%M:%S.%f")[:-3] + "-08:00"  # Adjust timezone as needed
+    return formatted_time
+
+# Example usage
+print(generate_blogger_timestamp())
