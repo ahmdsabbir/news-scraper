@@ -3,7 +3,7 @@ from lib.request_handler import RequestHandler
 from bs4 import BeautifulSoup, Tag
 from lib.parser import Parser
 from dataclasses import dataclass
-
+from src.typesafety.settings import WebsiteSettings
 
 @dataclass
 class Anchor:
@@ -12,13 +12,15 @@ class Anchor:
 
 
 class WebScraper:
-    def __init__(self, url: str, target_div_class: str):
-        self.url = url
-        self.target_div_class = target_div_class
+    def __init__(
+        self,
+        siteConfig: WebsiteSettings,
+    ):
         self.soup: Optional[BeautifulSoup] = None
+        self.siteConfig: WebsiteSettings = siteConfig
 
     def fetch_and_parse(self):
-        response = RequestHandler.make_request(self.url)
+        response = RequestHandler.make_request(self.siteConfig.url)
         content = response.content.decode('utf-8')
         self.soup = Parser.get_soup(content)
 
@@ -28,12 +30,25 @@ class WebScraper:
                 "Soup not initialized. Please call fetch_and_parse() first."
             )
 
-        main_div = self.soup.find("div", class_=self.target_div_class)
+        # main_div = self.soup.find("div", class_=self.target_div_class)
+
+        match self.siteConfig.home.attr:
+            case 'class':
+                main_div = self.soup.find(
+                    self.siteConfig.home.tag,
+                    class_=self.siteConfig.home.value
+                )
+            case 'id':
+                main_div = self.soup.find(
+                    self.siteConfig.home.tag,
+                    id=self.siteConfig.home.value
+                )
+
         if not main_div:
-            raise Exception(f"No div with class {self.target_div_class} found")
+            raise Exception(f"No div with class {self.siteConfig.home.value} found")
         
         if not isinstance(main_div, Tag):
-            raise Exception(f"No valid div with class {self.target_div_class} found")
+            raise Exception(f"No valid div with class {self.siteConfig.home.value} found")
 
         h3s = main_div.find_all("h3")
         if not h3s:
@@ -59,9 +74,21 @@ class WebScraper:
 
         h1 = soup.find("h1")
         # Find the main container div (assuming it has a specific class or id)
-        main_container = soup.find(
-            "div", id="container"
-        )  # Replace 'your-container-class' with the actual class of your container div
+        # main_container = soup.find(
+        #     "div", id="container"
+        # )  # Replace 'your-container-class' with the actual class of your container div
+
+        match self.siteConfig.single.attr:
+            case 'class':
+                main_container = soup.find(
+                    self.siteConfig.single.tag,
+                    class_=self.siteConfig.single.value
+                )
+            case 'id':
+                main_container = soup.find(
+                    self.siteConfig.single.tag,
+                    id=self.siteConfig.single.value
+                )
 
         if not main_container:
             raise Exception("No container div found")
@@ -69,7 +96,7 @@ class WebScraper:
         article: str = ""
         
         if not isinstance(main_container, Tag):
-            raise Exception(f"No valid div with class {self.target_div_class} found")
+            raise Exception(f"No valid div with class {self.siteConfig.single.value} found")
         
         # Iterate over each child div within the main container
         for child_div in main_container.find_all("div", recursive=False):

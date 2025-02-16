@@ -50,6 +50,9 @@ if __name__ == "__main__":
         successfull = 0
 
         for idx, url in enumerate(urls):
+            if idx == 2:
+                break
+            
             print()
             cprint(f"{idx + 1}: Scraping url: {url}", "cyan")
 
