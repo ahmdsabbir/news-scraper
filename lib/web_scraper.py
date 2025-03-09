@@ -25,13 +25,15 @@ class WebScraper:
         self.soup = Parser.get_soup(content)
 
     def get_anchors(self) -> List[Anchor]:
+        print('reached Parent Class')
+
         if not self.soup:
             raise Exception(
                 "Soup not initialized. Please call fetch_and_parse() first."
             )
 
         # main_div = self.soup.find("div", class_=self.target_div_class)
-
+        print('config: ', self.siteConfig)
         match self.siteConfig.home.attr:
             case 'class':
                 main_div = self.soup.find(
